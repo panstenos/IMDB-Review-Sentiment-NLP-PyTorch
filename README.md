@@ -104,21 +104,20 @@ This error can happen at the first batch of training but can also happen right a
 **Solution:** Include if statements checking the dimension of the tensors in using ```.dim()```:
 
 ```python
-for i, data in enumerate(pbar):
-      if data['ids'].dim() == 2: # check if the dimension of the inputs is 2. If so, no unsqeezing is needed
-        ids = data['ids'].to(device, dtype = torch.long)
-        mask = data['mask'].to(device, dtype = torch.long)
-        token_type_ids = data['token_type_ids'].to(device, dtype = torch.long)
-      elif data['ids'].dim() == 1: # if the values are 1D then add a first dimension: [1, max_len] -> [1, max_len], this will happen when batch_size = 1. Pytorch will return values as 1D
-        ids = data['ids'].to(device, dtype = torch.long).unsqueeze(0)
-        mask = data['mask'].to(device, dtype = torch.long).unsqueeze(0)
-        token_type_ids = data['token_type_ids'].to(device, dtype = torch.long).unsqueeze(0)
-      targets = data['targets'].to(device, dtype = torch.float) # targets remain 1D
+ if data['ids'].dim() == 2: # check if the dimension of the inputs is 2. If so, no unsqeezing is needed
+   ids = data['ids'].to(device, dtype = torch.long)
+   mask = data['mask'].to(device, dtype = torch.long)
+   token_type_ids = data['token_type_ids'].to(device, dtype = torch.long)
+ elif data['ids'].dim() == 1: # if the values are 1D then add a first dimension: [1, max_len] -> [1, max_len], this will happen when batch_size = 1. Pytorch will return values as 1D
+   ids = data['ids'].to(device, dtype = torch.long).unsqueeze(0)
+   mask = data['mask'].to(device, dtype = torch.long).unsqueeze(0)
+   token_type_ids = data['token_type_ids'].to(device, dtype = torch.long).unsqueeze(0)
+ targets = data['targets'].to(device, dtype = torch.float) # targets remain 1D
 
-      outputs = model(ids=ids, mask=mask, token_type_ids=token_type_ids)
-      if train_loader.batch_size == 1:
-        outputs = outputs.squeeze(0)
-      else:
-        outputs = outputs.squeeze()
-      loss = loss_fn(outputs, targets)
+ optimizer.zero_grad()
+ outputs = model(ids=ids, mask=mask, token_type_ids=token_type_ids)
+ outputs = outputs.squeeze(0) if outputs.squeeze().dim() == 0 else outputs.squeeze()
+ loss = loss_fn(outputs, targets)
+ loss.backward()
+ optimizer.step()
 ```
