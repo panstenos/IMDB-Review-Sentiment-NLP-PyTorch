@@ -5,7 +5,7 @@ Using pytorch and natural language processing techniques to classify positive an
 
 ### 1. KeyError 4605 (or any other number)
 
-Example: 
+**Example:** 
 ```python
 ---------------------------------------------------------------------------
 KeyError                                  Traceback (most recent call last)
@@ -41,9 +41,9 @@ KeyError: 4605
 Output is truncated. View as a scrollable element or open in a text editor. Adjust cell output settings...
 ```
 
-Cause: Indicies of dataframe not continuous
+**Cause:** Indicies of dataframe not continuous
 
-Solution: Check that the indicies of the dataframe are continous by using ```df.info()``` and re-index using the ```.reset_index()``` method.
+**Solution:** Check that the indicies of the dataframe are continous by using ```df.info()``` and re-index using the ```.reset_index()``` method.
 
 ```python
 df.info()
@@ -61,7 +61,7 @@ memory usage: 417.5+ KB
 ```
 ## 2. ValueError: Target size (torch.Size([1])) must be the same as input size (torch.Size([])) (or similar; target size not matching input size)
 
-Example:
+**Example:**
 ```python
 ---------------------------------------------------------------------------
 ValueError                                Traceback (most recent call last)
@@ -97,11 +97,11 @@ ValueError: Target size (torch.Size([1, 1])) must be the same as input size (tor
 ```
 Training progress bar showing 1064/1065 (last batch)
 
-Cause: Last batch of training (or validation) may consist of 1 element in which case it returns a different size than with a batch of 20. For example, instead of returning torch.Size([1, 1]) it returns torch.Size([1]) which causes an issue when applying the ```.squeeze()``` or ```.unsqueeze()``` methods. 
+**Cause:** Last batch of training (or validation) may consist of 1 element in which case it returns a different size than with a batch of 20. For example, instead of returning torch.Size([1, 1]) it returns torch.Size([1]) which causes an issue when applying the ```.squeeze()``` or ```.unsqueeze()``` methods. 
 
 This error can happen at the first batch of training but can also happen right at the last batch if the last batch consists of 1 element. The probability of the latter error happening is 1/batch_size, so for batch_size = 20 it is 5%.
 
-Solution: Include if statements checking the dimension of the tensors in using ```.dim()```:
+**Solution:** Include if statements checking the dimension of the tensors in using ```.dim()```:
 
 ```python
 for i, data in enumerate(pbar):
