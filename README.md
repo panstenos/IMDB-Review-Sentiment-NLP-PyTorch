@@ -1,5 +1,5 @@
 # IMDB-Review-Sentiment-NLP-PyTorch-BERT
-Using pytorch and natural language processing techniques to classify positive and negative IMDB reviews as well as custom reviews.
+Using pytorch and natural language processing techniques to classify positive and negative IMDB reviews as well as custom reviews. Achieved 88% validation accuracy on custom LSTM and 94% on BERT!
 
 ## Debugging
 
